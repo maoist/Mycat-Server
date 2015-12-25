@@ -95,6 +95,11 @@ public class XMLSchemaLoader implements SchemaLoader {
 		return (Map<String, SchemaConfig>) (schemas.isEmpty() ? Collections.emptyMap() : schemas);
 	}
 
+	/**
+	 * 加载schema的配置文件schema.xml
+	 * @param dtdFile
+	 * @param xmlFile
+	 */
 	private void load(String dtdFile, String xmlFile) {
 		InputStream dtd = null;
 		InputStream xml = null;
