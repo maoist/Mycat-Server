@@ -53,6 +53,7 @@ public final class NIOReactor {
 		new Thread(reactorR, name + "-RW").start();
 	}
 
+	//NIOConnector和NIOAcceptor建立连接后，调用NIOReactor.postRegister进行注册
 	final void postRegister(AbstractConnection c) {
 		reactorR.registerQueue.offer(c);
 		reactorR.selector.wakeup();

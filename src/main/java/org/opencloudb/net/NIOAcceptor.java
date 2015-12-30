@@ -47,12 +47,13 @@ public final class NIOAcceptor extends Thread  implements SocketAcceptor{
 	private static final AcceptIdGenerator ID_GENERATOR = new AcceptIdGenerator();
 
 	private final int port;
-	private final Selector selector;
-	private final ServerSocketChannel serverChannel;
+	private final Selector selector;//事件选择器
+	private final ServerSocketChannel serverChannel;//监听新进来的TCP连接的通道
 	private final FrontendConnectionFactory factory;
 	private long acceptCount;
-	private final NIOReactorPool reactorPool;
+	private final NIOReactorPool reactorPool;//当连接建立后，从reactorPool中分配一个NIOReactor，处理Read和Write事件
 
+	//监听通道在NIOAcceptor构造函数里启动,然后注册到实际进行任务处理的Dispather线程的Selector中
 	public NIOAcceptor(String name, String bindIp,int port, 
 			FrontendConnectionFactory factory, NIOReactorPool reactorPool)
 			throws IOException {
@@ -79,6 +80,9 @@ public final class NIOAcceptor extends Thread  implements SocketAcceptor{
 		return acceptCount;
 	}
 
+	//NIOAcceptor继承Thread实现run()函数，与NIOConnector的run()类似,也是一个无限循环体：
+	//selector不断监听连接事件，然后在accept()函数中对事件进行处理。
+	//在NIOAcceptor类中，只注册了OP_ACCEPT事件，所以只对OP_ACCEPT事件进行处理。
 	@Override
 	public void run() {
 		final Selector tSelector = this.selector;
@@ -104,6 +108,8 @@ public final class NIOAcceptor extends Thread  implements SocketAcceptor{
 		}
 	}
 
+	//NIOAcceptor的accept（）与NIOConnector的finishConnect()类似，当连接建立完毕后，从reactorPool中获得一个
+	//NIOReactor，然后把连接传递到NIOReactor，然后后续的Read和Write事件就交给NIOReactor处理了。
 	private void accept() {
 		SocketChannel channel = null;
 		try {

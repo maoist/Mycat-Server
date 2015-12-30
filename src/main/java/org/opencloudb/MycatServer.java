@@ -276,11 +276,11 @@ public class MycatServer {
 					+ "NIOConnector", reactorPool);
 			//启动
 			((NIOConnector) connector).start();
-
+			//mycat管理9066
 			manager = new NIOAcceptor(BufferPool.LOCAL_BUF_THREAD_PREX + NAME
 					+ "Manager", system.getBindIp(), system.getManagerPort(),
 					mf, reactorPool);
-
+			//mycat server 8066
 			server = new NIOAcceptor(BufferPool.LOCAL_BUF_THREAD_PREX + NAME
 					+ "Server", system.getBindIp(), system.getServerPort(), sf,
 					reactorPool);
