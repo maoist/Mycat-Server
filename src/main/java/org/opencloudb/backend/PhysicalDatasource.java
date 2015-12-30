@@ -400,7 +400,7 @@ public abstract class PhysicalDatasource {
 
 	public void releaseChannel(BackendConnection c) {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("release channel " + c);
+			//LOGGER.debug("release channel " + c);
 		}
 		// release connection
 		returnCon(c);

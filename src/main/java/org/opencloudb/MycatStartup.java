@@ -45,6 +45,7 @@ public final class MycatStartup {
 			}
 			// init
 			MycatServer server = MycatServer.getInstance();
+			//初始化前一些准备工作，log4j
 			server.beforeStart();
 
 			// startup

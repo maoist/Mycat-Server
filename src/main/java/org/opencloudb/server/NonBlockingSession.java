@@ -104,6 +104,9 @@ public class NonBlockingSession implements Session {
 		return target.remove(key);
 	}
 
+	/* 
+	 *	重要方法！！！
+	 */
 	@Override
 	public void execute(RouteResultset rrs, int type) {
 		// clear prev execute resources
@@ -115,6 +118,7 @@ public class NonBlockingSession implements Session {
 
 		// 检查路由结果是否为空
 		RouteResultsetNode[] nodes = rrs.getNodes();
+		//路由结果为空
 		if (nodes == null || nodes.length == 0 || nodes[0].getName() == null
 				|| nodes[0].getName().equals("")) {
 			source.writeErrMessage(ErrorCode.ER_NO_DB_ERROR,
@@ -122,6 +126,7 @@ public class NonBlockingSession implements Session {
 							+ source.getSchema());
 			return;
 		}
+		//single node
 		if (nodes.length == 1) {
 			singleNodeHandler = new SingleNodeHandler(rrs, this);
 			try {
@@ -131,6 +136,7 @@ public class NonBlockingSession implements Session {
 				source.writeErrMessage(ErrorCode.ERR_HANDLE_DATA, e.toString());
 			}
 		} else {
+			//muti node
 			boolean autocommit = source.isAutocommit();
 			SystemConfig sysConfig = MycatServer.getInstance().getConfig()
 					.getSystem();

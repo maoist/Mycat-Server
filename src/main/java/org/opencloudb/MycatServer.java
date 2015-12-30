@@ -84,11 +84,6 @@ public class MycatServer {
 	private BufferPool bufferPool;
 	private boolean aio = false;
 	private final AtomicLong xaIDInc = new AtomicLong();
-
-	public static final MycatServer getInstance() {
-		return INSTANCE;
-	}
-
 	private final MycatConfig config;
 	private final Timer timer;
 	private final SQLRecorder sqlRecorder;
@@ -100,6 +95,11 @@ public class MycatServer {
 	private NameableExecutor timerExecutor;
 	private ListeningExecutorService listeningExecutorService;
 
+	//单例
+	public static final MycatServer getInstance() {
+		return INSTANCE;
+	}
+	
 	public MycatServer() {
 		this.config = new MycatConfig();
 		this.timer = new Timer(NAME + "Timer", true);

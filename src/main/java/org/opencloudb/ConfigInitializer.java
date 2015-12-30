@@ -60,6 +60,7 @@ public class ConfigInitializer {
 	private volatile Map<String, PhysicalDBPool> dataHosts;
 
 	public ConfigInitializer(boolean loadDataHost) {
+		//加载schema的配置文件
 		SchemaLoader schemaLoader = new XMLSchemaLoader();
 		XMLConfigLoader configLoader = new XMLConfigLoader(schemaLoader);
 		schemaLoader = null;

@@ -66,6 +66,7 @@ public class MycatConfig {
 	private final ReentrantLock lock;
 
 	public MycatConfig() {
+		//初始化配置文件
 		ConfigInitializer confInit = new ConfigInitializer(true);
 		this.system = confInit.getSystem();
 		this.users = confInit.getUsers();

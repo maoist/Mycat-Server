@@ -82,7 +82,7 @@ public class SQLJob implements ResponseHandler, Runnable {
 	@Override
 	public void connectionAcquired(final BackendConnection conn) {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("con query sql:" + sql + " to con:" + conn);
+			//LOGGER.debug("con query sql:" + sql + " to con:" + conn);
 		}
 		conn.setResponseHandler(this);
 		try {

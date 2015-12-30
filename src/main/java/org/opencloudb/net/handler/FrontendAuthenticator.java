@@ -176,6 +176,7 @@ public class FrontendAuthenticator implements NIOHandler {
         }
     }
 
+    //login success
     protected void success(AuthPacket auth) {
         source.setAuthenticated(true);
         source.setUser(auth.user);
