@@ -37,16 +37,17 @@ import org.opencloudb.MycatServer;
 
 /**
  * @author mycat
+ * NIOConnector处理的是Connect事件，是客户端连接服务端事件，就是MyCAT作为客户端去主动连接MySQL Server的操作。
  */
 public final class NIOConnector extends Thread implements SocketConnector {
 	private static final Logger LOGGER = Logger.getLogger(NIOConnector.class);
 	public static final ConnectIdGenerator ID_GENERATOR = new ConnectIdGenerator();
 
 	private final String name;
-	private final Selector selector;
-	private final BlockingQueue<AbstractConnection> connectQueue;
+	private final Selector selector;//selector事件选择器
+	private final BlockingQueue<AbstractConnection> connectQueue;//需要建立连接的对象存放的队列
 	private long connectCount;
-	private final NIOReactorPool reactorPool;
+	private final NIOReactorPool reactorPool;//当连接建立后，从reactorPool中分配一个NIOReactor，处理Read和Write事件
 
 	public NIOConnector(String name, NIOReactorPool reactorPool)
 			throws IOException {
@@ -61,6 +62,8 @@ public final class NIOConnector extends Thread implements SocketConnector {
 		return connectCount;
 	}
 
+	//postConnect函数的作用，是把需要建立的连接放到connectQueue队列中，然后再唤醒selector。
+	//postConnect是在新建连接或者心跳时被XXXXConnectionFactory触发的
 	public void postConnect(AbstractConnection c) {
 		connectQueue.offer(c);
 		selector.wakeup();
@@ -73,7 +76,7 @@ public final class NIOConnector extends Thread implements SocketConnector {
 			++connectCount;
 			try {
 			    tSelector.select(1000L);
-				connect(tSelector);
+				connect(tSelector);//调用connect函数中，判断connectQueue中是否新的连接请求，如有则在selector中进行注册，然后发起连接
 				Set<SelectionKey> keys = tSelector.selectedKeys();
 				try {
 					for (SelectionKey key : keys) {
@@ -93,12 +96,16 @@ public final class NIOConnector extends Thread implements SocketConnector {
 		}
 	}
 
+	//connect函数的目的就是处理postConnect函数操作的connectQueue队列
 	private void connect(Selector selector) {
 		AbstractConnection c = null;
+		//判断connectQueue队列里是否有新的连接请求
 		while ((c = connectQueue.poll()) != null) {
 			try {
 				SocketChannel channel = (SocketChannel) c.getChannel();
+				//注册,处理CONNECT事件
 				channel.register(selector, SelectionKey.OP_CONNECT, c);
+				//连接mysql
 				channel.connect(new InetSocketAddress(c.host, c.port));
 			} catch (Exception e) {
 				c.close(e.toString());
@@ -106,6 +113,9 @@ public final class NIOConnector extends Thread implements SocketConnector {
 		}
 	}
 
+	//在NIOConnector类中，只处理OP_CONNECT事件，当连接建立完毕后，Read和Write事件如何处理呢？可以在finishConnect
+	//函数看到，当连接建立完毕后，从reactorPool中获得一个NIOReactor，然后把连接传递到NIOReactor，然后后续的Read和
+	//Write事件就交给NIOReactor处理了。
 	private void finishConnect(SelectionKey key, Object att) {
 		BackendAIOConnection c = (BackendAIOConnection) att;
 		try {

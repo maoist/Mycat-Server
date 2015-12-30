@@ -249,17 +249,14 @@ public abstract class AbstractConnection implements NIOConnection {
 
 	@Override
 	public void handle(byte[] data) {
-        if(isSupportCompress())
-        {
+        if(isSupportCompress()){
             List<byte[]> packs= CompressUtil.decompressMysqlPacket(data,decompressUnfinishedDataQueue);
 
-            for (byte[] pack : packs)
-            {
+            for (byte[] pack : packs){
 				if(pack.length != 0)
-                handler.handle(pack);
+					handler.handle(pack);
             }
-        }   else
-        {
+        }else{
             handler.handle(data);
         }
 	}

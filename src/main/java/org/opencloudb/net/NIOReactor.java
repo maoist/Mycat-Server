@@ -48,6 +48,7 @@ public final class NIOReactor {
 		this.reactorR = new RW();
 	}
 
+	//启动reactor线程
 	final void startup() {
 		new Thread(reactorR, name + "-RW").start();
 	}
@@ -91,6 +92,7 @@ public final class NIOReactor {
 							Object att = key.attachment();
 							if (att != null) {
 								con = (AbstractConnection) att;
+								//监听到读事件
 								if (key.isValid() && key.isReadable()) {
 									try {
 										con.asynRead();
@@ -103,6 +105,7 @@ public final class NIOReactor {
 										continue;
 									}
 								}
+								//监听到写事件
 								if (key.isValid() && key.isWritable()) {
 									con.doNextWriteCheck();
 								}

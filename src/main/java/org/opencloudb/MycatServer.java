@@ -265,12 +265,16 @@ public class MycatServer {
 					system.getServerPort(), sf, this.asyncChannelGroups[0]);
 
 		} else {
+			//NIO
 			LOGGER.info("using nio network handler ");
+			//根据processors的数量初始化NIO pool
 			NIOReactorPool reactorPool = new NIOReactorPool(
 					BufferPool.LOCAL_BUF_THREAD_PREX + "NIOREACTOR",
 					processors.length);
+			//初始化connector  NIOConnector用于连接mysql
 			connector = new NIOConnector(BufferPool.LOCAL_BUF_THREAD_PREX
 					+ "NIOConnector", reactorPool);
+			//启动
 			((NIOConnector) connector).start();
 
 			manager = new NIOAcceptor(BufferPool.LOCAL_BUF_THREAD_PREX + NAME

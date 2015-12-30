@@ -11,6 +11,7 @@ public class NIOReactorPool {
 		for (int i = 0; i < poolSize; i++) {
 			NIOReactor reactor = new NIOReactor(name + "-" + i);
 			reactors[i] = reactor;
+			//启动reactor
 			reactor.startup();
 		}
 	}

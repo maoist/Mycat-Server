@@ -39,6 +39,8 @@ import org.opencloudb.net.factory.FrontendConnectionFactory;
 
 /**
  * @author mycat
+ * NIOAcceptor处理的是Accept事件，是服务端接收客户端连接事件，
+ * 就是MyCAT作为服务端去处理前端业务程序发过来的连接请求。
  */
 public final class NIOAcceptor extends Thread  implements SocketAcceptor{
 	private static final Logger LOGGER = Logger.getLogger(NIOAcceptor.class);
