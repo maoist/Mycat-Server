@@ -94,7 +94,7 @@ public class PhysicalDBPool {
 		
 		this.readSources = readSources;
 		this.allDs = this.genAllDataSources();
-		
+		//当前datahost包含多少个读写节点
 		LOGGER.info("total resouces of dataHost " + this.hostName + " is :" + allDs.size());
 		
 		setDataSourceProps();

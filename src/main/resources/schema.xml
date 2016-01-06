@@ -9,7 +9,7 @@
 	<dataNode name="dn1" dataHost="host53" database="test" />
 	
 	<dataHost name="host53" maxCon="1000" minCon="10" balance="1"
-		writeType="0" dbType="mysql" dbDriver="native" switchType="1"  slaveThreshold="100">
+		writeType="0" dbType="mysql" dbDriver="native">
 		<heartbeat>select user()</heartbeat>
 		<!-- can have multi write hosts -->
 		<writeHost host="hostW1" url="192.168.1.53:3306" user="root" password="root">

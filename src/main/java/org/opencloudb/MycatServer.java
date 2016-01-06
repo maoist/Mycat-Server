@@ -280,7 +280,7 @@ public class MycatServer {
 			manager = new NIOAcceptor(BufferPool.LOCAL_BUF_THREAD_PREX + NAME
 					+ "Manager", system.getBindIp(), system.getManagerPort(),
 					mf, reactorPool);
-			//mycat server 8066
+			//mycat server 8066,接受客户端请求
 			server = new NIOAcceptor(BufferPool.LOCAL_BUF_THREAD_PREX + NAME
 					+ "Server", system.getBindIp(), system.getServerPort(), sf,
 					reactorPool);

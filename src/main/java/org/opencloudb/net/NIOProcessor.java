@@ -40,6 +40,9 @@ import org.opencloudb.util.TimeUtil;
 
 /**
  * @author mycat
+*NIOProcessor类，持有所有的前后端连接，定期的空闲检查和写队列检查。要完成这个动作。Mycat是通过遍历NIOProcessor
+*持有的所有连接来完成的。所以，可以适当的根据系统性能调整NIOProcessor的个数。使得前、后段连接可以均匀的分布在每个NIOProcessor上。这样，
+*就可以加快每次的空闲检查和写队列检查。快速的将空闲的连接关闭，减轻服务器的内存使用量。
  */
 public final class NIOProcessor {
 	private static final Logger LOGGER = Logger.getLogger("NIOProcessor");
